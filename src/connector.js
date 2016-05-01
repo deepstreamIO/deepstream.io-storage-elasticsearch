@@ -22,25 +22,25 @@ var events = require( 'events' ),
  * e.g.
  * 
  * { 
-*	host: 'localhost:9200',
-*	auth: 'user:password',
-*	log: 'trace',
-*	apiVersion: '2.2' 
-*	plugins: [],
+*		host: 'localhost:9200',
+*		auth: 'user:password',
+*		log: 'trace',
+*		apiVersion: '2.2' 
+*		plugins: [],
 *
-*	database: 'deepstream', 
-*	defaultTable: 'deepstream_records',
-*	splitChar: '/'
- * }
- *
- * Please note the three additional, optional keys:
- * 
- * database 	specifies which database to use. Defaults to 'deepstream'
- * defaultTable specifies which table records will be stored in that don't specify a table. Defaults to deepstream_records
- * splitChar 	specifies a character that separates the record's id from the table it should be stored in. defaults to null
- * 
- * @constructor
- */
+*		database: 'deepstream', 
+*		defaultTable: 'deepstream_records',
+*		splitChar: '/'
+* }
+*
+* Please note the three additional, optional keys:
+* 
+* database 	specifies which database to use. Defaults to 'deepstream'
+* defaultTable specifies which table records will be stored in that don't specify a table. Defaults to deepstream_records
+* splitChar 	specifies a character that separates the record's id from the table it should be stored in. defaults to null
+* 
+* @constructor
+*/
 var Connector = function( options ) {
 	this.isReady = false;
 	this.name = pckg.name;
@@ -108,6 +108,7 @@ Connector.prototype._onConnection = function( error ) {
 	if( error ) {
 		this.emit( 'error', error );
 	} else {
+		this.isReady = true;
 		this.emit( 'ready' );
 	}
 };

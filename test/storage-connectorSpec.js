@@ -16,6 +16,10 @@ describe( 'the message connector has the correct structure', function() {
 		storageConnector.on( 'ready', done );
 	} );
 	
+	it( 'sets the isReady flag on the storageConnector', function() {
+		expect( storageConnector.isReady ).toBe( true );
+	} );
+
 	it( 'implements the cache/storage connector interface', function() {
 			expect( typeof storageConnector.name ).toBe( 'string' );
 			expect( typeof storageConnector.version ).toBe( 'string' );

@@ -58,6 +58,7 @@ Connection.prototype.get = function( recordId, callback ) {
 * @param {Function} callback function that will be called once the value is stored
 */
 Connection.prototype.set = function( recordId, value, callback ) {
+	value = JSON.parse( JSON.stringify( value ) );
 	value = this._transformValueForStorage( value );
 	var params = this._getParams( recordId );
 	this.client.index( {
@@ -157,7 +158,7 @@ Connection.prototype._transformValueFromStorage = function( value ) {
 Connection.prototype._checkConnection = function() {
 	this.client.ping( {
 		requestTimeout: this._pingTimeout
-	}, function (error) {
+	}, function ( error ) {
 		if ( error ) {
 			this._callback( error );
 		} else {
