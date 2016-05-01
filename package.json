@@ -1,0 +1,33 @@
+{
+  "name": "deepstream.io-storage-elasticsearch",
+  "version": "0.0.1",
+  "description": "A storage connector for deepstream and elasticsearch",
+  "main": "src/connector.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node node_modules/jasmine/bin/jasmine JASMINE_CONFIG_PATH=jasmine.json",
+    "reporter": "node jasmine-runner"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deepstreamIO/deepstream.io-storage-elasticsearch.git"
+  },
+  "keywords": [
+    "elasticsearch",
+    "deepstream.io"
+  ],
+  "author": "deepstreamHub GmbH",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deepstreamIO/deepstream.io-storage-elasticsearch/issues"
+  },
+  "homepage": "https://github.com/deepstreamIO/deepstream.io-storage-elasticsearch#readme",
+  "dependencies": {
+    "elasticsearch": "^11.0.1"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1"
+  }
+}
