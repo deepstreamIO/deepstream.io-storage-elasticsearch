@@ -1,8 +1,8 @@
 /* global describe, expect, it, jasmine */
 var StorageConnector = require( '../src/connector' ),
 	EventEmitter = require( 'events' ).EventEmitter,
-	settings = { host: 'search-test-yeplhfhxvim2hg47siucsdj3gm.eu-central-1.es.amazonaws.com', splitChar: '/' },
-	clientSettings = { host: 'search-test-yeplhfhxvim2hg47siucsdj3gm.eu-central-1.es.amazonaws.com' },
+	settings = { host: process.env.ELASTICSEARCH_HOST, splitChar: '/' },
+	clientSettings = { host: process.env.ELASTICSEARCH_HOST },
 	elasticsearch = require( 'elasticsearch' );
 
 describe( 'the message connector has the correct structure', function() {
