@@ -1,4 +1,7 @@
 /* global describe, expect, it, jasmine */
+if( !process.env.ELASTICSEARCH_HOST ) {
+	throw new Error( 'Expected environment variable ELASTICSEARCH_HOST' );
+}
 var StorageConnector = require( '../src/connector' ),
 	EventEmitter = require( 'events' ).EventEmitter,
 	settings = { host: process.env.ELASTICSEARCH_HOST, splitChar: '/' },

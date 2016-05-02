@@ -1,8 +1,11 @@
 /* global describe, expect, it, jasmine */
+
+if( !process.env.ELASTICSEARCH_HOST ) {
+	throw new Error( 'Expected environment variable ELASTICSEARCH_HOST' );
+}
 var StorageConnector = require( '../src/connector' ),
 	EventEmitter = require( 'events' ).EventEmitter,
-	settings = { host: 'search-test-yeplhfhxvim2hg47siucsdj3gm.eu-central-1.es.amazonaws.com' },
-	MESSAGE_TIME = 20;
+	settings = { host: process.env.ELASTICSEARCH_HOST };
 
 describe( 'the message connector has the correct structure', function() {
 	var storageConnector;
