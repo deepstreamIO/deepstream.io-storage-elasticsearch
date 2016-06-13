@@ -17,7 +17,7 @@ test_script:
   - For %%d in ( build\** ) do MOVE %%d %cd%
 
 environment:
-  MEMCACHED_URL: 54.93.77.53:11211
+  ELASTICSEARCH_HOST: search-test-yeplhfhxvim2hg47siucsdj3gm.eu-central-1.es.amazonaws.com
 
 artifacts:
   - path: 'build\*.zip'
