@@ -61,7 +61,6 @@ Connection.prototype.get = function( recordId, callback ) {
 Connection.prototype.set = function( recordId, value, callback ) {
   value = JSON.parse( JSON.stringify( value ) )
   value = dataTransform.transformValueForStorage( value )
-  console.log( value )
   var params = this._getParams( recordId )
   this.client.index( {
     index: this._index,
