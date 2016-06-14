@@ -1,4 +1,5 @@
-var elasticsearch = require( 'elasticsearch' )
+const elasticsearch = require( 'elasticsearch' )
+const dataTransform = require( './transform-data' )
 
 /**
  * This class provides a wrapper around the elasticsearch connection.
@@ -40,7 +41,7 @@ Connection.prototype.get = function( recordId, callback ) {
     if( error && error.displayName !== 'NotFound' ) {
       callback( error )
     } else if( response.found ) {
-      value = this._transformValueFromStorage( response._source )
+      value = dataTransform.transformValueFromStorage( response._source )
       callback( null, value )
     } else {
       callback( null, null )
@@ -59,7 +60,8 @@ Connection.prototype.get = function( recordId, callback ) {
 */
 Connection.prototype.set = function( recordId, value, callback ) {
   value = JSON.parse( JSON.stringify( value ) )
-  value = this._transformValueForStorage( value )
+  value = dataTransform.transformValueForStorage( value )
+  console.log( value )
   var params = this._getParams( recordId )
   this.client.index( {
     index: this._index,
@@ -113,40 +115,6 @@ Connection.prototype._getParams = function( key ) {
   } else {
     return { type: this._defaultType, id: key }
   }
-}
-
-/**
- * Inverts the data from the deepstream structure to reduce nesting.
- *
- * { _v: 1, _d: { name: 'elasticsearch' } } -> { name: 'elasticsearch', __ds = { _v: 1 } }
- *
- * @param {String} value The data to save
- *
- * @private
- * @returns {Object} data
- */
-Connection.prototype._transformValueForStorage = function( value ) {
-  var data = value._d
-  delete value._d
-  data.__ds = value
-  return data
-}
-
-/**
- * Inverts the data from the stored structure back to the deepstream structure
- *
- * { name: 'elasticsearch', __ds = { _v: 1 } } -> { _v: 1, _d: { name: 'elasticsearch' } }
- *
- * @param {String} value The data to transform
- *
- * @private
- * @returns {Object} data
- */
-Connection.prototype._transformValueFromStorage = function( value ) {
-  var data = value.__ds
-  delete value.__ds
-  data._d = value
-  return data
 }
 
 /**
