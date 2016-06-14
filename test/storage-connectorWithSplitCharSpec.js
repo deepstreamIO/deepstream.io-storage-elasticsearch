@@ -1,79 +1,74 @@
 /* global describe, expect, it, jasmine */
 if( !process.env.ELASTICSEARCH_HOST ) {
-	throw new Error( 'Expected environment variable ELASTICSEARCH_HOST' );
+  throw new Error( 'Expected environment variable ELASTICSEARCH_HOST' )
 }
-var StorageConnector = require( '../src/connector' ),
-	EventEmitter = require( 'events' ).EventEmitter,
-	settings = { host: process.env.ELASTICSEARCH_HOST, splitChar: '/' },
-	clientSettings = { host: process.env.ELASTICSEARCH_HOST },
-	elasticsearch = require( 'elasticsearch' );
 
-describe( 'the message connector has the correct structure', function() {
-	var storageConnector;
-	var elasticsearchClient;
+const StorageConnector = require( '../src/connector' )
+const expect = require('chai').expect
+const EventEmitter = require( 'events' ).EventEmitter
+const elasticsearch = require( 'elasticsearch' )
+const clientSettings = { host: process.env.ELASTICSEARCH_HOST }
+const settings = { host: process.env.ELASTICSEARCH_HOST, splitChar: '/' }
 
-	beforeAll( function( done ) {
-		elasticsearchClient = new elasticsearch.Client( clientSettings );
-		elasticsearchClient.ping( {
-			requestTimeout: '400'
-		}, done );
-	} );
+describe( 'the message connector has the correct structure', () => {
+  var storageConnector
+  var elasticsearchClient
 
-	beforeAll( function( done ) {
-		storageConnector = new StorageConnector( settings );
-		storageConnector.on( 'ready', done );
-	} );
+  before( ( done ) => {
+    elasticsearchClient = new elasticsearch.Client( clientSettings )
+    elasticsearchClient.ping( {
+      requestTimeout: '400'
+    }, done )
+  } )
 
-	describe( 'sets a value', function() {
+  before( ( done ) => {
+    storageConnector = new StorageConnector( settings )
+    storageConnector.on( 'ready', done )
+  } )
 
-		it( 'sets a value', function( done ) {
-			storageConnector.set( 'aType/someValue', { _v: 10, _d: { firstname: 'Bob' } }, function( error ) {
-				expect( error ).toBe( null );
-				done();
-			} );
-		} );
 
-		it( 'set the value within elasticsearch', function( done ) {
-			elasticsearchClient.get( {
-				index: 'deepstream',
-				type: 'aType',
-				id: 'someValue'
-			}, function( error, response ) {
-				expect( response._source ).toEqual( { __ds: { _v: 10 }, firstname: 'Bob' } );
-				done();
-			} );
-		} );
+  it( 'sets a value', ( done ) => {
+    storageConnector.set( 'aType/someValue', { _v: 10, _d: { firstname: 'Bob' } }, ( error ) => {
+      expect( error ).to.equal( null )
+      done()
+    } )
+  } )
 
-	} );
+  it( 'set the value within elasticsearch', ( done ) => {
+    elasticsearchClient.get( {
+      index: 'deepstream',
+      type: 'aType',
+      id: 'someValue'
+    }, ( error, response ) => {
+      expect( response._source ).to.deep.equal( { __ds: { _v: 10 }, firstname: 'Bob' } )
+      done()
+    } )
+  } )
 
-	it( 'retrieves the existing value', function( done ) {
-		storageConnector.get( 'aType/someValue', function( error, value ) {
-			expect( error ).toBe( null );
-			expect( value ).toEqual( { _v: 10, _d: { firstname: 'Bob' } } );
-			done();
-		} );
-	} );
+  it( 'retrieves the existing value', ( done ) => {
+    storageConnector.get( 'aType/someValue', ( error, value ) => {
+      expect( error ).to.equal( null )
+      expect( value ).to.deep.equal( { _v: 10, _d: { firstname: 'Bob' } } )
+      done()
+    } )
+  } )
 
-	describe( 'deletes a value', function() {
+  it( 'deletes a value', ( done ) => {
+    storageConnector.delete( 'aType/someValue', ( error ) => {
+      expect( error ).to.equal( null )
+      done()
+    } )
+  } )
 
-		it( 'deletes a value', function( done ) {
-			storageConnector.delete( 'aType/someValue', function( error ) {
-				expect( error ).toBe( null );
-				done();
-			} );
-		} );
+  it( 'is no long within elasticsearch', ( done ) => {
+    elasticsearchClient.get( {
+      index: 'deepstream',
+      type: 'aType',
+      id: 'someValue'
+    }, ( error, response ) => {
+      expect( response.found ).to.equal( false )
+      done()
+    } )
+  } )
 
-		it( 'is no long within elasticsearch', function( done ) {
-			elasticsearchClient.get( {
-				index: 'deepstream',
-				type: 'aType',
-				id: 'someValue'
-			}, function( error, response ) {
-				expect( response.found ).toBe( false );
-				done();
-			} );
-		} );
-
-	} );
-
-} );
+} )
