@@ -5,6 +5,17 @@
 This connector uses [the npm elasticsearch package](https://www.npmjs.com/package/elasticsearch). Please have a look there for detailed options.
 
 ##Configuration Options
+```yaml
+plugins:
+  storage:
+    name: elasticsearch
+    options:
+      host: ${ELASTICSEARCH_HOST}
+      database: 'someDb'
+      defaultTable: 'someTable'
+      splitChar: '/'
+```
+
 ```javascript
 {
 	//The host that elasticsearch should use
@@ -27,7 +38,7 @@ This connector uses [the npm elasticsearch package](https://www.npmjs.com/packag
 
 	/* (Optional) A character that's used as part of the
 	* record names to split it into a tabel and an id part, e.g.
-	* 
+	*
 	* books/dream-of-the-red-chamber
 	*
 	* would create a type called 'books' and store the record under the name
@@ -43,7 +54,7 @@ var Deepstream = require( 'deepstream.io' ),
     ElasticSearchStorageConnector = require( 'deepstream.io-storage-elasticsearch' ),
     server = new Deepstream();
 
-server.set( 'storage', new ElasticSearchStorageConnector( { 
+server.set( 'storage', new ElasticSearchStorageConnector( {
   host: 'localhost:5672',
   pingTimeout: 200,
   splitChar: '/'

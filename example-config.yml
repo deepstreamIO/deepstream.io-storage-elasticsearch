@@ -1,0 +1,8 @@
+plugins:
+  storage:
+    name: elasticsearch
+    options:
+      host: ${ELASTICSEARCH_HOST}
+      database: 'someDb'
+      defaultTable: 'someTable'
+      splitChar: '/'
