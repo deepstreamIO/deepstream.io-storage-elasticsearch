@@ -3,7 +3,7 @@
 /**
  * Inverts the data from the deepstream structure to reduce nesting.
  *
- * { _v: 1, _d: { name: 'bob' } } -> { name: 'bob', __ds = { _v: 1 } }
+ * { _v: 1, _d: { name: 'elasticsearch' } } -> { name: 'elasticsearch', __ds = { _v: 1 } }
  *
  * @param  {String} value The data to save
  *
@@ -11,6 +11,7 @@
  * @returns {Object} data
  */
 module.exports.transformValueForStorage = function ( value ) {
+  value = JSON.parse( JSON.stringify( value ) )
   var data = value._d
   delete value._d
   data.__ds = value
@@ -20,7 +21,7 @@ module.exports.transformValueForStorage = function ( value ) {
 /**
  * Inverts the data from the stored structure back to the deepstream structure
  *
- * { name: 'bob', __ds = { _v: 1 } } -> { _v: 1, _d: { name: 'bob' } }
+ * { name: 'elasticsearch', __ds = { _v: 1 } } -> { _v: 1, _d: { name: 'elasticsearch' } }
  *
  * @param  {String} value The data to transform
  *
