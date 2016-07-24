@@ -1,6 +1,6 @@
 {
   "name": "deepstream.io-storage-elasticsearch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A storage connector for deepstream and elasticsearch",
   "main": "src/connector.js",
   "directories": {
