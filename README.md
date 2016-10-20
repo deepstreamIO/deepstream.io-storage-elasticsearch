@@ -21,8 +21,10 @@ plugins:
       '
       mappings: '
         {
-          "properties" : {
-            "field1" : { "type" : "string", "index" : "not_analyzed" }
+          "type1" : {
+            "properties" : {
+              "field1" : { "type" : "string", "index" : "not_analyzed" }
+            }
           }
         }
       '
@@ -67,10 +69,12 @@ plugins:
 	/* (Optional) Index mapping: https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-create-index.html
 	*/
 	mapping: {
-		properties: {
-			field1: {
-				type: 'string',
-				index: 'not_analyzed'
+    type1: {
+			properties: {
+				field1: {
+					type: 'string',
+					index: 'not_analyzed'
+				}
 			}
 		}
 	}

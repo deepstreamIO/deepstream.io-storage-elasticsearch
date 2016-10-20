@@ -21,7 +21,9 @@ var Connection = function( options, callback ) {
   this._mappings = options.mappings || '{}'
 
   this.client = new elasticsearch.Client( options )
+
   this._checkConnection()
+  this._createIndex()
 }
 
 /**
@@ -41,18 +43,7 @@ Connection.prototype.get = function( recordId, callback ) {
     type: params.type,
     id: params.id
   }, ( error, response ) => {
-    if( error && response.error && response.error.type == 'index_not_found_exception' ) {
-      var body = { settings: {}, mappings: {} }
-
-      body.settings = JSON.parse(this._settings)
-      body.mappings[params.type] = JSON.parse(this._mappings)
-
-      this.client.indices.create( {
-        index: this._index,
-        body: JSON.stringify(body)
-      } );
-      callback( null, null )
-    } else if( error && error.displayName !== 'NotFound' ) {
+    if( error && error.displayName !== 'NotFound' ) {
       callback( error )
     } else if( response.found ) {
       value = dataTransform.transformValueFromStorage( response._source )
@@ -147,4 +138,21 @@ Connection.prototype._checkConnection = function() {
   } )
 }
 
+/**
+ * Create elastisearch index with settings and mappings, if set.
+ * Can silently fail because the index will not be recreated or updated if it
+ * already exists.
+ *
+ * @private
+ * @returns {void}
+ */
+Connection.prototype._createIndex = function() {
+  this.client.indices.create( {
+    index: this._index,
+    body: JSON.stringify({
+      settings: JSON.parse(this._settings),
+      mappings: JSON.parse(this._mappings)
+    })
+  } );
+}
 module.exports = Connection
