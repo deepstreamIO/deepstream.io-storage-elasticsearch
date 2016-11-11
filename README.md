@@ -14,6 +14,20 @@ plugins:
       database: 'someDb'
       defaultTable: 'someTable'
       splitChar: '/'
+      settings: '
+        {
+          "number_of_shards": "1"
+        }
+      '
+      mappings: '
+        {
+          "type1" : {
+            "properties" : {
+              "field1" : { "type" : "string", "index" : "not_analyzed" }
+            }
+          }
+        }
+      '
 ```
 
 ```javascript
@@ -45,6 +59,25 @@ plugins:
 	* 'dream-of-the-red-chamber'
 	*/
 	splitChar: '/'
+
+	/* (Optional) Index settings: https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-create-index.html
+	*/
+	settings: {
+		number_of_shards: 1
+	}
+
+	/* (Optional) Index mapping: https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-create-index.html
+	*/
+	mapping: {
+    type1: {
+			properties: {
+				field1: {
+					type: 'string',
+					index: 'not_analyzed'
+				}
+			}
+		}
+	}
 }
 ```
 

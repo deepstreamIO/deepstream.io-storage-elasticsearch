@@ -17,9 +17,13 @@ var Connection = function( options, callback ) {
   this._index = options.database || 'deepstream'
   this._defaultType = options.defaultTable || 'deepstream_records'
   this._splitChar = options.splitChar || null
+  this._settings = options.settings || '{}'
+  this._mappings = options.mappings || '{}'
 
   this.client = new elasticsearch.Client( options )
+
   this._checkConnection()
+  this._createIndex()
 }
 
 /**
@@ -33,6 +37,7 @@ var Connection = function( options, callback ) {
 Connection.prototype.get = function( recordId, callback ) {
   var value
   var params = this._getParams( recordId )
+
   this.client.get( {
     index: this._index,
     type: params.type,
@@ -133,4 +138,21 @@ Connection.prototype._checkConnection = function() {
   } )
 }
 
+/**
+ * Create elastisearch index with settings and mappings, if set.
+ * Can silently fail because the index will not be recreated or updated if it
+ * already exists.
+ *
+ * @private
+ * @returns {void}
+ */
+Connection.prototype._createIndex = function() {
+  this.client.indices.create( {
+    index: this._index,
+    body: JSON.stringify({
+      settings: JSON.parse(this._settings),
+      mappings: JSON.parse(this._mappings)
+    })
+  } );
+}
 module.exports = Connection
