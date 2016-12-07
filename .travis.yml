@@ -3,12 +3,11 @@ env:
     - CXX=g++-4.8
     - ELASTICSEARCH_HOST=localhost:9200
 
-jdk:
-  - openjdk7
+services:
+  - elasticsearch
 
 before_script:
-  - ls -la /usr/share/elasticsearch/bin/elasticsearch
-  - elasticsearch -v
+  - sleep 10
 
 # Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
