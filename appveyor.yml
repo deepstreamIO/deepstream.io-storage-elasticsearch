@@ -1,16 +1,6 @@
 environment:
   ELASTICSEARCH_HOST: localhost:9200
 
-install:
- - ps: $url = "https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.3.4/elasticsearch-2.3.4.zip"
- - ps: $output = "c:\Windows\temp\es.zip"
- - ps: Invoke-WebRequest -Uri $url -OutFile $output
- - ps: New-Item -ItemType 'Directory' -Path 'c:\Elasticsearch' -Force
- - ps: 7z x C:\Windows\Temp\es.zip -oC:\Elasticsearch
- - ps: $env:JAVA_HOME = 'C:\Program Files\Java\jdk1.8.0'
- - ps: Start-Process -FilePath 'C:\Elasticsearch\elasticsearch-2.3.4\bin\elasticsearch.bat' -WorkingDirectory 'c:\Elasticsearch\elasticsearch-2.3.4\bin'
- - ps: Start-Sleep -s 5
-
 # Do not insert any code under here without making sures it's in publishingtest first
 os:
   - Visual Studio 2015
@@ -19,6 +9,14 @@ platform:
   - x64
 
 install:
+  - ps: $url = "https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/zip/elasticsearch/2.3.4/elasticsearch-2.3.4.zip"
+  - ps: $output = "c:\Windows\temp\es.zip"
+  - ps: Invoke-WebRequest -Uri $url -OutFile $output
+  - ps: New-Item -ItemType 'Directory' -Path 'c:\Elasticsearch' -Force
+  - ps: 7z x C:\Windows\Temp\es.zip -oC:\Elasticsearch
+  - ps: $env:JAVA_HOME = 'C:\Program Files\Java\jdk1.8.0'
+  - ps: Start-Process -FilePath 'C:\Elasticsearch\elasticsearch-2.3.4\bin\elasticsearch.bat' -WorkingDirectory 'c:\Elasticsearch\elasticsearch-2.3.4\bin'
+  - ps: Start-Sleep -s 5
   - ps: Install-Product node 4.4.5
   - npm install
 
