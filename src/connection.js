@@ -148,7 +148,7 @@ Connection.prototype._checkConnection = function() {
  */
 Connection.prototype._createIndexTemplate = function() {
   var template = {
-        aliases: this._index,
+        aliases: JSON.parse(`{"${this._index}":{}}`),
         template: this._index + '-*',
         settings: JSON.parse(this._indexSettings),
         mappings: JSON.parse(this._indexMappings)
