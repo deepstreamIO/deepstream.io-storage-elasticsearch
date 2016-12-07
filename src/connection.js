@@ -15,15 +15,15 @@ var Connection = function( options, callback ) {
 
   this._pingTimeout = options.pingTimeout || 1000
   this._index = options.database || 'deepstream'
-  this._defaultType = options.defaultTable || 'deepstream_records'
+  this._defaultType = options.defaultType || 'deepstream_records'
   this._splitChar = options.splitChar || null
-  this._settings = options.settings || '{}'
-  this._mappings = options.mappings || '{}'
+  this._indexSettings = options.indexSettings || '{}'
+  this._indexMappings = options.indexMappings || '{}'
 
   this.client = new elasticsearch.Client( options )
 
   this._checkConnection()
-  this._createIndex()
+  this._createIndexTemplate()
 }
 
 /**
@@ -67,7 +67,7 @@ Connection.prototype.set = function( recordId, value, callback ) {
   value = dataTransform.transformValueForStorage( value )
   var params = this._getParams( recordId )
   this.client.index( {
-    index: this._index,
+    index: `${this._index}-${new Date(new Date().toUTCString()).toJSON().slice(0,10)}`,
     type: params.type,
     id: params.id,
     body: value
@@ -139,20 +139,25 @@ Connection.prototype._checkConnection = function() {
 }
 
 /**
- * Create elastisearch index with settings and mappings, if set.
- * Can silently fail because the index will not be recreated or updated if it
- * already exists.
+ * Create an index template.
+ * Can silently fail. The template will be updated
+ * if it already exists.
  *
  * @private
  * @returns {void}
  */
-Connection.prototype._createIndex = function() {
-  this.client.indices.create( {
-    index: this._index,
-    body: JSON.stringify({
-      settings: JSON.parse(this._settings),
-      mappings: JSON.parse(this._mappings)
-    })
+Connection.prototype._createIndexTemplate = function() {
+  var template = {
+        aliases: this._index,
+        template: this._index + '-*',
+        settings: JSON.parse(this._indexSettings),
+        mappings: JSON.parse(this._indexMappings)
+      };
+
+  this.client.indices.putTemplate( {
+    name: this._index,
+    body: JSON.stringify(template)
   } );
 }
+
 module.exports = Connection
