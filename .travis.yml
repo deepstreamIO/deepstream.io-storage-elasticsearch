@@ -1,7 +1,14 @@
 env:
   global:
     - CXX=g++-4.8
-    - ELASTICSEARCH_HOST=search-test-yeplhfhxvim2hg47siucsdj3gm.eu-central-1.es.amazonaws.com
+    - ELASTICSEARCH_HOST=localhost:9200
+
+jdk:
+  - openjdk7
+
+before_script:
+  - ls -la /usr/share/elasticsearch/bin/elasticsearch
+  - elasticsearch -v
 
 # Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
