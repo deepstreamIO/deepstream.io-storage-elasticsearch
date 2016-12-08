@@ -150,8 +150,8 @@ Connection.prototype._createIndexTemplate = function() {
   var template = {
         aliases: JSON.parse(`{"${this._index}":{}}`),
         template: this._index + '-*',
-        settings: JSON.parse(this._indexSettings),
-        mappings: JSON.parse(this._indexMappings)
+        settings: (typeof(this._indexSettings) == 'string' ? JSON.parse(this._indexSettings) : this._indexSettings),
+        mappings: (typeof(this._indexMappings) == 'string' ? JSON.parse(this._indexMappings) : this._indexMappings)
       };
 
   this.client.indices.putTemplate( {
