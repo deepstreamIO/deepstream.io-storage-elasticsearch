@@ -63,14 +63,14 @@ plugins:
 	/* (Optional) Index settings:
 	* https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-update-settings.html
 	*/
-	settings: {
+	indexSettings: {
 		number_of_shards: 1
 	}
 
 	/* (Optional) Index mapping:
 	* https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-put-mapping.html
 	*/
-	mapping: {
+	indexMappings: {
     type1: {
 			properties: {
 				field1: {

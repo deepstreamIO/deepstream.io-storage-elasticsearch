@@ -14,8 +14,8 @@ var Connection = function( options, callback ) {
   this._connection = null
 
   this._pingTimeout = options.pingTimeout || 1000
-  this._index = options.database || 'deepstream'
-  this._defaultType = options.defaultType || 'deepstream_records'
+  this._index = options.index || 'deepstream'
+  this._defaultType = options.defaultType || 'deepstream_record'
   this._splitChar = options.splitChar || null
   this._indexSettings = options.indexSettings || '{}'
   this._indexMappings = options.indexMappings || '{}'
