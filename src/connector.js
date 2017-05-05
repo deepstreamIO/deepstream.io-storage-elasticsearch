@@ -123,8 +123,8 @@ Connector.prototype._onConnection = function( error ) {
  * @returns {void}
  */
 Connector.prototype._checkOptions = function( options ) {
-  if( typeof options.host !== 'string' ) {
-    throw new Error( 'Missing option host' )
+  if( options.hosts === undefined && typeof options.host !== 'string' ) {
+    throw new Error( 'Missing option host or hosts' )
   }
 }
 
