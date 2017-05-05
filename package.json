@@ -17,8 +17,8 @@
     "url": "git+https://github.com/deepstreamIO/deepstream.io-storage-elasticsearch.git"
   },
   "keywords": [
-    "elasticsearch",
-    "deepstream.io"
+    "deepstream.io",
+    "elasticsearch"
   ],
   "author": "deepstreamHub GmbH",
   "license": "Apache-2.0",
@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/deepstreamIO/deepstream.io-storage-elasticsearch#readme",
   "dependencies": {
-    "elasticsearch": "^11.0.1"
+    "elasticsearch": "^12.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
