@@ -10,16 +10,16 @@ plugins:
   storage:
     name: elasticsearch
     options:
-      host: ${ELASTICSEARCH_HOST}
-      database: 'someDb'
-      defaultTable: 'someTable'
+      host: 'localhost:9200'
+      index: 'someIndex'
+      defaultType: 'someType'
       splitChar: '/'
-      settings: '
+      indexSettings: '
         {
-          "number_of_shards": "1"
+          "number_of_shards" : 1
         }
       '
-      mappings: '
+      indexMappings: '
         {
           "type1" : {
             "properties" : {
@@ -40,11 +40,11 @@ plugins:
 
 	//(Optional, defaults to 'deepstream'). This is the index in elasticsearch,
 	//using database for consistency across all plugins.
-	database: 'someDb',
+	index: 'someIndex',
 
 	//(Optional, defaults to 'deepstream_records'). This is the type in elasticsearch,
 	//using table for consistency across all plugins
-	defaultTable: 'someTable',
+	defaultType: 'someType',
 
 	//(Optional, defaults to 1000). This is the ping timeout used
 	//when doing the initial ping to ensure the connection is setup correctly
@@ -60,15 +60,17 @@ plugins:
 	*/
 	splitChar: '/'
 
-	/* (Optional) Index settings: https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-create-index.html
+	/* (Optional) Index settings:
+	* https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-update-settings.html
 	*/
-	settings: {
+	indexSettings: {
 		number_of_shards: 1
 	}
 
-	/* (Optional) Index mapping: https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-create-index.html
+	/* (Optional) Index mapping:
+	* https://www.elastic.co/guide/en/elasticsearch/reference/2.3/indices-put-mapping.html
 	*/
-	mapping: {
+	indexMappings: {
     type1: {
 			properties: {
 				field1: {
@@ -88,8 +90,7 @@ var Deepstream = require( 'deepstream.io' ),
     server = new Deepstream();
 
 server.set( 'storage', new ElasticSearchStorageConnector( {
-  host: 'localhost:5672',
-  pingTimeout: 200,
+  host: 'localhost:9200',
   splitChar: '/'
 }));
 

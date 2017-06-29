@@ -2,7 +2,6 @@ plugins:
   storage:
     name: elasticsearch
     options:
-      host: ${ELASTICSEARCH_HOST}
-      database: 'someDb'
-      defaultTable: 'someTable'
+      host: 'localhost:9200'
+      index: 'someIndex'
       splitChar: '/'
