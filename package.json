@@ -27,14 +27,14 @@
   },
   "homepage": "https://github.com/deepstreamIO/deepstream.io-storage-elasticsearch#readme",
   "dependencies": {
-    "elasticsearch": "^13.0.0"
+    "elasticsearch": "^15.4.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "coveralls": "^2.11.9",
-    "eslint": "^2.11.1",
-    "eslint-config-airbnb": "^3.1.0",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.3",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
     "istanbul": "^0.4.3",
-    "mocha": "^2.5.2"
+    "mocha": "^6.0.2"
   }
 }
