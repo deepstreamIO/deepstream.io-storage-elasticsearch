@@ -1,4 +1,4 @@
-# deepstream.io-storage-elasticsearch [![npm version](https://badge.fury.io/js/deepstream.io-storage-elasticsearch.svg)](http://badge.fury.io/js/deepstream.io-storage-elasticsearch)
+# deepstream.io-storage-elasticsearch [![npm version](https://badge.fury.io/js/deepstream.io-storage-elasticsearch.svg)](http://badge.fury.io/js/deepstream.io-storage-elasticsearch) [![Greenkeeper badge](https://badges.greenkeeper.io/deepstreamIO/deepstream.io-storage-elasticsearch.svg)](https://greenkeeper.io/)
 
 [deepstream](http://deepstream.io) storage connector for [elasticsearch](https://www.elastic.co/)
 
