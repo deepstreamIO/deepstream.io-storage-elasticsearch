@@ -1,5 +1,5 @@
-const elasticsearch = require( 'elasticsearch' )
-const dataTransform = require( './transform-data' )
+const elasticsearch = require( "elasticsearch" );
+const dataTransform = require( "./transform-data" );
 
 /**
  * This class provides a wrapper around the elasticsearch connection.
@@ -10,21 +10,21 @@ const dataTransform = require( './transform-data' )
  * @constructor
  */
 var Connection = function( options, callback ) {
-  this._callback = callback
-  this._connection = null
+  this._callback = callback;
+  this._connection = null;
 
-  this._pingTimeout = options.pingTimeout || 1000
-  this._index = options.index || 'deepstream'
-  this._defaultType = options.defaultType || 'deepstream_record'
-  this._splitChar = options.splitChar || null
-  this._indexSettings = options.indexSettings || '{}'
-  this._indexMappings = options.indexMappings || '{}'
+  this._pingTimeout = options.pingTimeout || 1000;
+  this._index = options.index || "deepstream";
+  this._defaultType = options.defaultType || "deepstream_record";
+  this._splitChar = options.splitChar || null;
+  this._indexSettings = options.indexSettings || "{}";
+  this._indexMappings = options.indexMappings || "{}";
 
-  this.client = new elasticsearch.Client( options )
+  this.client = new elasticsearch.Client( options );
 
-  this._checkConnection()
-  this._createIndexTemplate()
-}
+  this._checkConnection();
+  this._createIndexTemplate();
+};
 
 /**
 * Wrapper around elasticsearch.index that extracts the type and id from the record id,
@@ -35,24 +35,24 @@ var Connection = function( options, callback ) {
 * @param {Function} callback function that will be called once the value is retrieved
 */
 Connection.prototype.get = function( recordId, callback ) {
-  var value
-  var params = this._getParams( recordId )
+  var value;
+  var params = this._getParams( recordId );
 
   this.client.get( {
     index: this._index,
     type: params.type,
-    id: params.id
+    id: params.id,
   }, ( error, response ) => {
-    if( error && error.displayName !== 'NotFound' ) {
-      callback( error )
-    } else if( response.found ) {
-      value = dataTransform.transformValueFromStorage( response._source )
-      callback( null, value )
+    if ( error && error.displayName !== "NotFound" ) {
+      callback( error );
+    } else if ( response.found ) {
+      value = dataTransform.transformValueFromStorage( response._source );
+      callback( null, value );
     } else {
-      callback( null, null )
+      callback( null, null );
     }
-  } )
-}
+  } );
+};
 
 /**
 * Wrapper around elasticsearch.index that extracts the type and id from the record id
@@ -64,21 +64,21 @@ Connection.prototype.get = function( recordId, callback ) {
 * @param {Function} callback function that will be called once the value is stored
 */
 Connection.prototype.set = function( recordId, value, callback ) {
-  value = dataTransform.transformValueForStorage( value )
-  var params = this._getParams( recordId )
+  value = dataTransform.transformValueForStorage( value );
+  var params = this._getParams( recordId );
   this.client.index( {
-    index: `${this._index}-${new Date(new Date().toUTCString()).toJSON().slice(0,10)}`,
+    index: `${this._index}-${new Date(new Date().toUTCString()).toJSON().slice(0, 10)}`,
     type: params.type,
     id: params.id,
-    body: value
+    body: value,
   }, ( error, response ) => {
-    if( error ) {
-      callback( error )
+    if ( error ) {
+      callback( error );
     } else {
-      callback( null )
+      callback( null );
     }
-  } )
-}
+  } );
+};
 
 /**
 * Wrapper around elasticsearch.delete that extracts the type and id from the record id
@@ -87,19 +87,19 @@ Connection.prototype.set = function( recordId, value, callback ) {
 * @param {Function} callback function that will be called once the value is retrieved
 */
 Connection.prototype.delete = function( recordId, callback ) {
-  var params = this._getParams( recordId )
+  var params = this._getParams( recordId );
   this.client.delete( {
     index: this._index,
     type: params.type,
-    id: params.id
+    id: params.id,
   }, ( error, response ) => {
-    if( error ) {
-      callback( error )
+    if ( error ) {
+      callback( error );
     } else {
-      callback( null )
+      callback( null );
     }
-  } )
-}
+  } );
+};
 
 /**
  * Parses the provided record name and returns an object
@@ -111,14 +111,14 @@ Connection.prototype.delete = function( recordId, callback ) {
  * @returns {Object} params
  */
 Connection.prototype._getParams = function( key ) {
-  var parts = key.split( this._splitChar )
+  var parts = key.split( this._splitChar );
 
-  if( parts.length === 2 ) {
-    return { type: parts[ 0 ], id: parts[ 1 ] }
+  if ( parts.length === 2 ) {
+    return { type: parts[ 0 ], id: parts[ 1 ] };
   } else {
-    return { type: this._defaultType, id: key }
+    return { type: this._defaultType, id: key };
   }
-}
+};
 
 /**
  * Ping elastisearch to see if it is up and running
@@ -128,15 +128,15 @@ Connection.prototype._getParams = function( key ) {
  */
 Connection.prototype._checkConnection = function() {
   this.client.ping( {
-    requestTimeout: this._pingTimeout
+    requestTimeout: this._pingTimeout,
   }, ( error ) => {
     if ( error ) {
-      this._callback( error )
+      this._callback( error );
     } else {
-      this._callback()
+      this._callback();
     }
-  } )
-}
+  } );
+};
 
 /**
  * Create an index template.
@@ -149,15 +149,15 @@ Connection.prototype._checkConnection = function() {
 Connection.prototype._createIndexTemplate = function() {
   var template = {
         aliases: JSON.parse(`{"${this._index}":{}}`),
-        template: this._index + '-*',
-        settings: (typeof(this._indexSettings) == 'string' ? JSON.parse(this._indexSettings) : this._indexSettings),
-        mappings: (typeof(this._indexMappings) == 'string' ? JSON.parse(this._indexMappings) : this._indexMappings)
+        template: this._index + "-*",
+        settings: (typeof(this._indexSettings) == "string" ? JSON.parse(this._indexSettings) : this._indexSettings),
+        mappings: (typeof(this._indexMappings) == "string" ? JSON.parse(this._indexMappings) : this._indexMappings),
       };
 
   this.client.indices.putTemplate( {
     name: this._index,
-    body: JSON.stringify(template)
+    body: JSON.stringify(template),
   } );
-}
+};
 
-module.exports = Connection
+module.exports = Connection;

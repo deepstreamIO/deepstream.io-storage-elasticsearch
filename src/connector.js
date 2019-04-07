@@ -1,7 +1,7 @@
-var events = require( 'events' ),
-  util = require( 'util' ),
-  Connection = require( './connection' ),
-  pckg = require( '../package.json' )
+var events = require( "events" ),
+  util = require( "util" ),
+  Connection = require( "./connection" ),
+  pckg = require( "../package.json" );
 
 /**
  * Connects deepstream to a elasticsearch. Users can then query ElasticSearch on the side and benefit from
@@ -42,15 +42,15 @@ var events = require( 'events' ),
 * @constructor
 */
 var Connector = function( options ) {
-  this.isReady = false
-  this.name = pckg.name
-  this.version = pckg.version
-  this._checkOptions( options )
-  this._options = options
-  this._connection = new Connection( options, this._onConnection.bind( this ) )
-}
+  this.isReady = false;
+  this.name = pckg.name;
+  this.version = pckg.version;
+  this._checkOptions( options );
+  this._options = options;
+  this._connection = new Connection( options, this._onConnection.bind( this ) );
+};
 
-util.inherits( Connector, events.EventEmitter )
+util.inherits( Connector, events.EventEmitter );
 
 /**
  * Writes a value to the database. If the specified table doesn't exist yet, it will be created
@@ -65,8 +65,8 @@ util.inherits( Connector, events.EventEmitter )
  * @returns {void}
  */
 Connector.prototype.set = function( key, value, callback ) {
-  this._connection.set( key, value, callback )
-}
+  this._connection.set( key, value, callback );
+};
 
 /**
  * Retrieves a value from storage
@@ -79,8 +79,8 @@ Connector.prototype.set = function( key, value, callback ) {
  * @returns {void}
  */
 Connector.prototype.get = function( key, callback ) {
-  this._connection.get( key, callback )
-}
+  this._connection.get( key, callback );
+};
 
 /**
  * Deletes an entry from storage.
@@ -93,8 +93,8 @@ Connector.prototype.get = function( key, callback ) {
  * @returns {void}
  */
 Connector.prototype.delete = function( key, callback ) {
-  this._connection.delete( key, callback )
-}
+  this._connection.delete( key, callback );
+};
 
 /**
  * Callback for established connections
@@ -105,13 +105,13 @@ Connector.prototype.delete = function( key, callback ) {
  * @returns {void}
  */
 Connector.prototype._onConnection = function( error ) {
-  if( error ) {
-    this.emit( 'error', error )
+  if ( error ) {
+    this.emit( "error", error );
   } else {
-    this.isReady = true
-    this.emit( 'ready' )
+    this.isReady = true;
+    this.emit( "ready" );
   }
-}
+};
 
 /**
  * Makes sure that the options object contains all mandatory
@@ -123,9 +123,9 @@ Connector.prototype._onConnection = function( error ) {
  * @returns {void}
  */
 Connector.prototype._checkOptions = function( options ) {
-  if( options.hosts === undefined && typeof options.host !== 'string' ) {
-    throw new Error( 'Missing option host or hosts' )
+  if ( options.hosts === undefined && typeof options.host !== "string" ) {
+    throw new Error( "Missing option host or hosts" );
   }
-}
+};
 
-module.exports = Connector
+module.exports = Connector;
