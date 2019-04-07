@@ -1,13 +1,14 @@
 /* global describe, it, expect, jasmine */
-
 if( !process.env.ELASTICSEARCH_HOST ) {
-  throw new Error( 'Expected environment variable ELASTICSEARCH_HOST' )
+  process.env.ELASTICSEARCH_HOST = 'localhost:9200'
 }
 
-const StorageConnector = require( '../src/connector' )
+const StorageConnector = require( './connector' )
 const expect = require('chai').expect
 const EventEmitter = require( 'events' ).EventEmitter
-const settings = { host: process.env.ELASTICSEARCH_HOST }
+const settings = {
+  host: process.env.ELASTICSEARCH_HOST
+}
 
 describe( 'the message connector has the correct structure', () => {
   var storageConnector
@@ -43,7 +44,8 @@ describe( 'the message connector has the correct structure', () => {
   } )
 
   it( 'sets a value', ( done ) => {
-    storageConnector.set( 'someValue', { _v: 10, _d: { firstname: 'Wolfram' } }, ( error ) => {
+    storageConnector.set('someValue',  { _v: 10, _d: { firstname: 'Wolfram' } }, ( error ) => {
+      console.log(error)
       expect( error ).to.equal( null )
       done()
     } )

@@ -2,7 +2,7 @@
 'use strict'
 
 const expect = require('chai').expect
-const TransformData = require( '../src/transform-data' )
+const TransformData = require( './transform-data' )
 
 describe( 'Transforms outgoing data', () => {
 

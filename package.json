@@ -7,10 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha",
-    "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
-    "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
-    "ci": "npm run coverage && npm run lint"
+    "test": "mocha src/",
+    "coverage": "nyc mocha src/",
+    "ci": "npm run coverage"
   },
   "repository": {
     "type": "git",
@@ -27,14 +26,11 @@
   },
   "homepage": "https://github.com/deepstreamIO/deepstream.io-storage-elasticsearch#readme",
   "dependencies": {
-    "elasticsearch": "^13.0.0"
+    "elasticsearch": "^15.4.1"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "coveralls": "^2.11.9",
-    "eslint": "^2.11.1",
-    "eslint-config-airbnb": "^3.1.0",
-    "istanbul": "^0.4.3",
-    "mocha": "^2.5.2"
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.3",
+    "mocha": "^6.1.0"
   }
 }

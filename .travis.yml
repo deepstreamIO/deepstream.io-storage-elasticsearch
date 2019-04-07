@@ -9,12 +9,6 @@ services:
 before_script:
   - sleep 10
 
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install elasticsearch; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew services start elasticsearch; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sleep 10; fi
-
 # Do not insert any code under here without making sures it's in publishingtest first
 language: node_js
 
@@ -26,35 +20,27 @@ plugins:
     - g++-4.8
 
 node_js:
-  - "stable"
-  - "4.4.5"
+  - "10"
 
 matrix:
   include:
-    - node_js: "4.4.5"
+    - node_js: "10"
       os: osx
+    - node_js: "10"
+      os: linux
 
 script:
-  - npm run test
-  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/package.sh
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      npm run test;
+    fi
+  - curl -o package.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/package-connector.sh
   - chmod 555 package.sh
   - ./package.sh
 
 deploy:
-  - provider: s3
-    access_key_id:
-      secure: "BjwnnemIrGQeUgCXbK1+2FwjryN8bLL02GXtI/T6++0s/TacTwyF/trdHud24zgFvLXxvNf8j7NYQ/8OR27eMsc+WHhVYS9sJOKys7zmZnSpWyO6fPsphRI+7Ocqf+e4xG6RN1uFvYKbb46GleIZv+6ioEyxBPusAoXRfxJRkLCebXDRMb2WrphEFM2aLP7BW4ALdm+8SBcjWtwTqCcXpSrWYkdsXQWXGgzNtCArZOUwQwmfeqBWnZfU3NGR3Y76Re3ikcToKn6SjqOSb/Ncrq6Na54JwFZhxKt62n/kJr76CZNb8ypX6aL2lZ7H0y/Y8Et2gWIjX4wu+oWdXqtTz/T7cjTVd2pPp/o0l3a9aGbg1rK7LO0wIW8dySyl95RQymWxwWqgRjdUXGYOL/o4paU8uBjOtYDHDPq6l0hRF5zel9UWcO42aZ8/fYSpM+jCTlFhexBbOXtbLUVcL5Hmo64sucS4gf257MyRGXljJLc3N//RlMscVPrOVuH2zpiHxfVHcHmQZcE41ywxlJgR/YNwgkU2TZNK1/Fu90zFsdajKcK/v+Obe8PWl3IjZDr1Dg896DYTXrxA2wmPfe6ZjQa5CLlT8uVJLd/5xOGNzJl8juDTeKcC2PJR+uBoEUto16fFbkEZ6wYaEkn2R4s1h79XDqBqyLEOYmX5CmiUVo4="
-    secret_access_key:
-      secure: "emMfAWpLYvs4daYb8LkMCGxzfxQGHMu+sFkxa7JUHZPDG92j1D71HhQOHrCjKYDb0b00ydCDMsoXbmLT8tRoyD8Mi13z7M6ppJlrF3KNhbTfVtqgK+tAGLj8WboIrVWNM57MXqetuMoeuEv503IE8PMxrkUQmJY6jdaf9XQR8r3s9R08FvUiWeDwUTaKORzJ1+w/t7vt/8XMPi95l/hGJeO/4TgchH7qZ91zks43RXT606cg8NXFn1FpPd7UvfpK5JJfecVNPQveJdJJYesxiQKbV+S09a8s5bCsbTuNP2H+GxINyMkOspMnuCJ2uk8DdNRcsRf2J3zkEehi6UURaL/sfXMwWzAJQEt/llhQMg83zaHPepPNzzGqTft2MSDpstVSikbURf8lbl5HWP0wdWhFATj+o2F13BH3KCI3BA+Z2MEnNZEGIo0aoIyKtVPgtTS8m36QifHLldMY+QE6TVNJ6ynewnzKIJvgtEGV1uCOgVhg7AmeDwQojVu+0OpiSO26M0Zy6QR83lb8AO6oobYYYQJC78e45nz7PhbEOH143LRs4stNnvEvKDH/TIjs9j0VU66f7vL35AJ+x61M6J6+GtWvox77mCSYkkR47fe1vf3H3eSomiKjR4HKHDGkUytj8jx3eiOfl7cU5XFWBmHibVc0XnuUQlNI7QxqLbQ="
-    bucket: ds-server-artifacts
-    skip_cleanup: true
-    acl: public_read
-    local_dir: build
-    upload-dir: $TRAVIS_REPO_SLUG
   - provider: releases
     skip_cleanup: true
-    api_key:
-      secure: "CFwhXcsjXAJss7dso5P/6Z7GHExK/J8RvirLUlM1aWQndFY16ZCQKmS81zd1oOPjZgrIrnC4CBESjnKzMmjGR40UgYjE+I5ZYB2A6d2w4K17LkNOFPKBKK1jqjcicVb/w/ZF0ay362Sam6gJLPKhggSlXYPymGk8d7OQFQxS2mLswoXecIUWJ2B5qgolWbbqtV4mlvgg+QYIWXkrFr99ilL/+iCS0ttX7IO63HYm7WaofZVkTFeo1q8DiUR9MPs/Hj/4x0eMFTH5DoXxRUj4nmbJ7cIbCDdtThWGJs8t96/APglGClNA4QyDHqERtf4mT5U5waasc705Wuf64iT3y5qj5i4oYki/8RrkpIy8U0q5rni/SbqG3JT3IKxLOmturFUh9Oc3Afj4+UF2J4RG+yhNwNbvHL5D794bV7ysOJB1OPw+nFBh21IR5HyZ80rbkjWMw0Ed6ZNhLilxjnlHuMUuj4L8zZpQOd93yZS1Y+sOGDjoUXZ6UPdVfG66LFOpLtet30U8MVNuylQ8oiPCDeoD/9k85sy5mNM+uIwQWnPB8ycI9HYgo88O6HQr3citghJFslza4tshJZw6iGGX597ML8eekuO3aWdAYy6OGiq4mZ+h7Rq+waKTCx2hq3YaglnulRIIh5UpL/fF9lGZQteEtC7LWkxWtCKcGIVwhbs="
+    api_key: ${GITHUB_TOKEN}
     file_glob: true
     file:
       - "build/*.tar.gz"
@@ -63,7 +49,7 @@ deploy:
       tags: true
 
 after_deploy:
-  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io-connector-publishingtest/master/scripts/test.sh
+  - curl -o test.sh -L https://raw.githubusercontent.com/deepstreamIO/deepstream.io/connector-submodules/scripts/connector/test-connector.sh
   - chmod 555 test.sh
   - ./test.sh
 
