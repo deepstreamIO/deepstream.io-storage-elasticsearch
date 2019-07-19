@@ -41,31 +41,41 @@ var events = require( "events" ),
 *
 * @constructor
 */
-var Connector = function( options ) {
+var Connector = function( options, services) {
   this.isReady = false;
-  this.name = pckg.name;
-  this.version = pckg.version;
-  this._checkOptions( options );
+  this._services = services;
   this._options = options;
-  this._connection = new Connection( options, this._onConnection.bind( this ) );
+
+  this.description = `${pckg.name} ${pckg.version}`;
 };
 
 util.inherits( Connector, events.EventEmitter );
+
+Connector.prototype.init = function () {
+  if ( this._options.hosts === undefined && typeof this._options.host !== "string" ) {
+    this( "Missing option host or hosts" );
+   }
+
+  this._connection = new Connection( this._options, this._onConnection.bind( this ) );
+}
+
+Connector.prototype.whenReady = async function () {
+  if (!this.isReady) {
+    return new Promise(resolve => this.once('ready', resolve))
+  }
+}
+
+Connector.prototype.close = async function () {
+}
+
 
 /**
  * Writes a value to the database. If the specified table doesn't exist yet, it will be created
  * before the write is excecuted. If a table creation is already in progress, create table will
  * only add the method to its array of callbacks
- *
- * @param {String}  key
- * @param {Object}  value
- * @param {Function} callback Will be called with null for successful set operations or with an error message string
- *
- * @public
- * @returns {void}
  */
-Connector.prototype.set = function( key, value, callback ) {
-  this._connection.set( key, value, callback );
+Connector.prototype.set = function( key, version, value, callback ) {
+  this._connection.set( key, version, value, callback );
 };
 
 /**
@@ -110,21 +120,6 @@ Connector.prototype._onConnection = function( error ) {
   } else {
     this.isReady = true;
     this.emit( "ready" );
-  }
-};
-
-/**
- * Makes sure that the options object contains all mandatory
- * settings
- *
- * @param {Object} options
- *
- * @private
- * @returns {void}
- */
-Connector.prototype._checkOptions = function( options ) {
-  if ( options.hosts === undefined && typeof options.host !== "string" ) {
-    throw new Error( "Missing option host or hosts" );
   }
 };
 

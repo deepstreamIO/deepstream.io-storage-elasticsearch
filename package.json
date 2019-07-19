@@ -1,6 +1,6 @@
 {
-  "name": "deepstream.io-storage-elasticsearch",
-  "version": "1.0.1",
+  "name": "@deepstream/storage-elasticsearch",
+  "version": "2.0.0",
   "description": "A storage connector for deepstream and elasticsearch",
   "main": "src/connector.js",
   "directories": {
@@ -10,7 +10,7 @@
     "test": "mocha src/",
     "coverage": "nyc mocha src/",
     "ci": "npm run coverage",
-    "docker": "docker -p 9200:9200 -p 9300:9300 -e \"discovery.type=single-node\" docker.elastic.co/elasticsearch/elasticsearch:6.7.1"
+    "docker": "docker run -p 9200:9200 -p 9300:9300 -e \"discovery.type=single-node\" docker.elastic.co/elasticsearch/elasticsearch:6.7.1"
   },
   "repository": {
     "type": "git",

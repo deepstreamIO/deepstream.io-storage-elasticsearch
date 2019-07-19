@@ -12,49 +12,41 @@ const settings = {
 
 describe( "the message connector has the correct structure", () => {
   var storageConnector;
-  it( "throws an error if required connection parameters are missing", () => {
-    expect( () => { new StorageConnector( "gibberish" ); } ).to.throw();
-  } );
 
-  it( "creates the storageConnector", ( done ) => {
+  it( "creates the storageConnector", async ( ) => {
     storageConnector = new StorageConnector( settings );
-    expect( storageConnector.isReady ).to.equal( false );
-    storageConnector.on( "ready", done );
-  } );
-
-  it( "sets the isReady flag on the storageConnector", () => {
-    expect( storageConnector.isReady ).to.equal( true );
+    storageConnector.init()
+    await storageConnector.whenReady()
   } );
 
   it( "implements the cache/storage connector interface", () => {
-    expect( typeof storageConnector.name ).to.equal( "string" );
-    expect( typeof storageConnector.version ).to.equal( "string" );
+    expect( typeof storageConnector.description ).to.equal( "string" );
     expect( typeof storageConnector.get ).to.equal( "function" );
     expect( typeof storageConnector.set ).to.equal( "function" );
     expect( typeof storageConnector.delete ).to.equal( "function" );
-    expect( storageConnector instanceof EventEmitter ).to.equal( true );
   } );
 
   it( "retrieves a non existing value", ( done ) => {
-    storageConnector.get( "someValue", ( error, value ) => {
+    storageConnector.get( "someValue", ( error, version, value ) => {
       expect( error ).to.equal( null );
+      expect( version ).to.equal( -1 );
       expect( value ).to.equal( null );
       done();
     } );
   } );
 
   it( "sets a value", ( done ) => {
-    storageConnector.set("someValue",  { _v: 10, _d: { firstname: "Wolfram" } }, ( error ) => {
-      console.log(error);
+    storageConnector.set("someValue",  10, { firstname: "Wolfram" }, ( error ) => {
       expect( error ).to.equal( null );
       done();
     } );
   } );
 
   it( "retrieves an existing value", ( done ) => {
-    storageConnector.get( "someValue", ( error, value ) => {
+    storageConnector.get( "someValue", ( error, version, value ) => {
       expect( error ).to.equal( null );
-      expect( value ).to.deep.equal( { _v: 10, _d: { firstname: "Wolfram" } } );
+      expect( version ).to.equal( 10 );
+      expect( value ).to.deep.equal( { firstname: "Wolfram" } );
       done();
     } );
   } );
@@ -67,8 +59,9 @@ describe( "the message connector has the correct structure", () => {
   } );
 
   it( "can't retrieve a deleted value", ( done ) => {
-    storageConnector.get( "someValue", ( error, value ) => {
+    storageConnector.get( "someValue", ( error, version, value ) => {
       expect( error ).to.equal( null );
+      expect( version ).to.equal( -1 );
       expect( value ).to.equal( null );
       done();
     } );

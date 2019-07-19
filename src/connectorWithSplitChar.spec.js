@@ -25,13 +25,14 @@ describe( "the message connector has the correct structure", () => {
     }, done );
   } );
 
-  before( ( done ) => {
+  before( async ( ) => {
     storageConnector = new StorageConnector( settings );
-    storageConnector.on( "ready", done );
+    storageConnector.init()
+    await storageConnector.whenReady();
   } );
 
   it( "sets a value", ( done ) => {
-    storageConnector.set( "deepstream_record/someValue", { _v: 10, _d: { firstname: "Bob" } }, ( error ) => {
+    storageConnector.set( "deepstream_record/someValue", 10, { firstname: "Bob" }, ( error ) => {
       expect( error ).to.equal( null );
       done();
     } );
@@ -49,9 +50,10 @@ describe( "the message connector has the correct structure", () => {
   } );
 
   it( "retrieves the existing value", ( done ) => {
-    storageConnector.get( "deepstream_record/someValue", ( error, value ) => {
+    storageConnector.get( "deepstream_record/someValue", ( error, version, value ) => {
       expect( error ).to.equal( null );
-      expect( value ).to.deep.equal( { _v: 10, _d: { firstname: "Bob" } } );
+      expect( version ).to.equal( 10 );
+      expect( value ).to.deep.equal({ firstname: "Bob" } );
       done();
     } );
   } );

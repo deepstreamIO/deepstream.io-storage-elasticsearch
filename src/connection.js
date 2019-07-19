@@ -47,9 +47,9 @@ Connection.prototype.get = function( recordId, callback ) {
       callback( error );
     } else if ( response.found ) {
       value = dataTransform.transformValueFromStorage( response._source );
-      callback( null, value );
+      callback( null, value._v, value._d);
     } else {
-      callback( null, null );
+      callback( null, -1, null );
     }
   } );
 };
@@ -63,8 +63,8 @@ Connection.prototype.get = function( recordId, callback ) {
 * @param {Object} value The record data
 * @param {Function} callback function that will be called once the value is stored
 */
-Connection.prototype.set = function( recordId, value, callback ) {
-  value = dataTransform.transformValueForStorage( value );
+Connection.prototype.set = function( recordId, version, value, callback ) {
+  value = dataTransform.transformValueForStorage( { _v: version, _d: value } );
   var params = this._getParams( recordId );
   this.client.index( {
     index: `${this._index}-${new Date(new Date().toUTCString()).toJSON().slice(0, 10)}`,
