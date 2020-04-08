@@ -1,4 +1,4 @@
-# deepstream.io-storage-elasticsearch [![npm version](https://badge.fury.io/js/deepstream.io-storage-elasticsearch.svg)](http://badge.fury.io/js/deepstream.io-storage-elasticsearch)
+# deepstream.io-storage-elasticsearch [![npm version](https://badge.fury.io/js/%40deepstream%2Fstorage-elasticsearch.svg)](https://badge.fury.io/js/%40deepstream%2Fstorage-elasticsearch)
 
 [deepstream](http://deepstream.io) storage connector for [elasticsearch](https://www.elastic.co/)
 
