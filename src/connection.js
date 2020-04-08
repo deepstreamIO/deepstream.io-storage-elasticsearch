@@ -1,4 +1,4 @@
-const elasticsearch = require( "elasticsearch" );
+const { Client } = require( "@elastic/elasticsearch" );
 const dataTransform = require( "./transform-data" );
 
 /**
@@ -20,7 +20,11 @@ var Connection = function( options, callback ) {
   this._indexSettings = options.indexSettings || "{}";
   this._indexMappings = options.indexMappings || "{}";
 
-  this.client = new elasticsearch.Client( options );
+  const newOptions = options
+  newOptions.node = options.host
+  newOptions.auth = { username: options.username, password: options.password }
+
+  this.client = new elasticsearch.Client( newOptions );
 
   this._checkConnection();
   this._createIndexTemplate();

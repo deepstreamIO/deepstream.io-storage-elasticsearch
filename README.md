@@ -37,6 +37,8 @@ plugins:
 
 	//(Optional, no default). The authentication to elasticsearch
 	auth: 'user:password',
+	username: 'user'
+	password: 'password'
 
 	//(Optional, defaults to 'deepstream'). This is the index in elasticsearch,
 	//using database for consistency across all plugins.
@@ -83,7 +85,7 @@ plugins:
 }
 ```
 
-##Basic Setup
+## Basic Setup
 ```javascript
 var Deepstream = require( 'deepstream.io' ),
     ElasticSearchStorageConnector = require( 'deepstream.io-storage-elasticsearch' ),
