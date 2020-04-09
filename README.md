@@ -1,10 +1,10 @@
-# deepstream.io-storage-elasticsearch [![npm version](https://badge.fury.io/js/deepstream.io-storage-elasticsearch.svg)](http://badge.fury.io/js/deepstream.io-storage-elasticsearch)
+# deepstream.io-storage-elasticsearch [![npm version](https://badge.fury.io/js/%40deepstream%2Fstorage-elasticsearch.svg)](https://badge.fury.io/js/%40deepstream%2Fstorage-elasticsearch)
 
 [deepstream](http://deepstream.io) storage connector for [elasticsearch](https://www.elastic.co/)
 
 This connector uses [the npm elasticsearch package](https://www.npmjs.com/package/elasticsearch). Please have a look there for detailed options.
 
-##Configuration Options
+## Configuration Options
 ```yaml
 plugins:
   storage:
@@ -37,6 +37,8 @@ plugins:
 
 	//(Optional, no default). The authentication to elasticsearch
 	auth: 'user:password',
+	username: 'user'
+	password: 'password'
 
 	//(Optional, defaults to 'deepstream'). This is the index in elasticsearch,
 	//using database for consistency across all plugins.
@@ -83,7 +85,7 @@ plugins:
 }
 ```
 
-##Basic Setup
+## Basic Setup
 ```javascript
 var Deepstream = require( 'deepstream.io' ),
     ElasticSearchStorageConnector = require( 'deepstream.io-storage-elasticsearch' ),

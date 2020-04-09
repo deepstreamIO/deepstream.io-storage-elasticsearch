@@ -5,7 +5,7 @@ if ( !process.env.ELASTICSEARCH_HOST ) {
 
 const StorageConnector = require( "./connector" );
 const expect = require("chai").expect;
-const elasticsearch = require( "elasticsearch" );
+const { Client } = require( "@elastic/elasticsearch" );
 const clientSettings = {
   host: process.env.ELASTICSEARCH_HOST,
 };
@@ -19,7 +19,7 @@ describe( "the message connector has the correct structure", () => {
   var elasticsearchClient;
 
   before( ( done ) => {
-    elasticsearchClient = new elasticsearch.Client( clientSettings );
+    elasticsearchClient = new Client( clientSettings );
     elasticsearchClient.ping( {
       requestTimeout: "400",
     }, done );
