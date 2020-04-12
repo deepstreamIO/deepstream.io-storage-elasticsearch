@@ -1,6 +1,6 @@
 /* global describe, expect, it, jasmine */
 if ( !process.env.ELASTICSEARCH_HOST ) {
-  process.env.ELASTICSEARCH_HOST = "localhost:9200";
+  process.env.ELASTICSEARCH_HOST = "http://localhost:9200";
 }
 
 const StorageConnector = require( "./connector" );

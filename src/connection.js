@@ -20,11 +20,15 @@ var Connection = function( options, callback ) {
   this._indexSettings = options.indexSettings || "{}";
   this._indexMappings = options.indexMappings || "{}";
 
-  const newOptions = options;
+  const newOptions = {};
   newOptions.node = options.host;
-  newOptions.auth = { username: options.username, password: options.password }
+  if (options.username && options.password) {
+    newOptions.auth = { username: options.username, password: options.password }
+  }
 
-  this.client = Client( newOptions );
+  console.log(newOptions)
+  
+  this.client = new Client(newOptions);
 
   this._checkConnection();
   this._createIndexTemplate();
@@ -42,18 +46,18 @@ Connection.prototype.get = function( recordId, callback ) {
   var value;
   var params = this._getParams( recordId );
 
-  this.client.get( {
+  this.client.get({
     index: this._index,
     type: params.type,
     id: params.id,
   }, ( error, response ) => {
-    if ( error && error.displayName !== "NotFound" ) {
+    if ( error && response.body.error.type !== "index_not_found_exception" ) {
       callback( error );
-    } else if ( response.found ) {
+    } else if ( error && response.body.error.type === "index_not_found_exception" ) {
+      callback( null, -1, null );     
+    } else {
       value = dataTransform.transformValueFromStorage( response._source );
       callback( null, value._v, value._d);
-    } else {
-      callback( null, -1, null );
     }
   } );
 };
@@ -70,12 +74,19 @@ Connection.prototype.get = function( recordId, callback ) {
 Connection.prototype.set = function( recordId, version, value, callback ) {
   value = dataTransform.transformValueForStorage( { _v: version, _d: value } );
   var params = this._getParams( recordId );
+  console.log({
+    index: `${this._index}-${new Date(new Date().toUTCString()).toJSON().slice(0, 10)}`,
+    type: params.type,
+    id: params.id,
+    body: value,
+  })
   this.client.index( {
     index: `${this._index}-${new Date(new Date().toUTCString()).toJSON().slice(0, 10)}`,
     type: params.type,
     id: params.id,
     body: value,
   }, ( error, response ) => {
+    console.log(error, response)
     if ( error ) {
       callback( error );
     } else {
@@ -131,9 +142,9 @@ Connection.prototype._getParams = function( key ) {
  * @returns {void}
  */
 Connection.prototype._checkConnection = function() {
-  this.client.ping( {
+  this.client.ping({}, {
     requestTimeout: this._pingTimeout,
-  }, ( error ) => {
+  }, ( error, response) => {
     if ( error ) {
       this._callback( error );
     } else {

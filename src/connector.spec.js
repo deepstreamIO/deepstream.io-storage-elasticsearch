@@ -1,11 +1,10 @@
 /* global describe, it, expect, jasmine */
 if ( !process.env.ELASTICSEARCH_HOST ) {
-  process.env.ELASTICSEARCH_HOST = "localhost:9200";
+  process.env.ELASTICSEARCH_HOST = "http://localhost:9200";
 }
 
 const StorageConnector = require( "./connector" );
 const expect = require("chai").expect;
-const EventEmitter = require( "events" ).EventEmitter;
 const settings = {
   host: process.env.ELASTICSEARCH_HOST,
 };
